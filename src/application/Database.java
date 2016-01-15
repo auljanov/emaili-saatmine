@@ -21,10 +21,6 @@ public class Database {
 
 	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	public static void addRecord(DatabaseRecord record) {
-		// addRecord(record.getMail(), subject, message);
-	}
-
 	public static void addRecord(Date date, String mail, String subject, String message) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(DATE_FORMAT.format(date)).append(DELIMITER);
