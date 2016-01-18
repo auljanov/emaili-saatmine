@@ -17,8 +17,9 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import event.SentItemsBackButtonClickListener;
+import event.SentItemsPageBackButtonClickListener;
 import event.SentItemsWindowListener;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class SentItems extends JFrame {
 
@@ -41,45 +42,53 @@ public class SentItems extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		JButton btnGoBack = new JButton("<- Go Back");
-		btnGoBack.addMouseListener(new SentItemsBackButtonClickListener(this));
-
+		JLabel lblAllSentItems = new JLabel("All Sent Items:"); // comment to page title
+		lblAllSentItems.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		JButton btnGoBack = new JButton("<- Go Back"); // new button to main page
+		btnGoBack.addMouseListener(new SentItemsPageBackButtonClickListener(this));
 		btnGoBack.setToolTipText("To main page");
 
-		JLabel lblAllSentItems = new JLabel("All Sent Items:");
-		lblAllSentItems.setFont(new Font("Tahoma", Font.BOLD, 14));
-
-		JScrollPane scrollPane = new JScrollPane();
+		JScrollPane scrollPane = new JScrollPane(); // create scroll panel
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(10).addComponent(
-										lblAllSentItems, GroupLayout.PREFERRED_SIZE, 664, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(573).addComponent(btnGoBack,
-								GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(scrollPane,
-								GroupLayout.PREFERRED_SIZE, 659, GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap(10, Short.MAX_VALUE)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblAllSentItems).addGap(18)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE)
-						.addGap(18)
-						.addComponent(btnGoBack, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)));
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(573)
+							.addComponent(btnGoBack, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(lblAllSentItems, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(lblAllSentItems, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnGoBack, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+		);
 
-		table = new JTable();
+		table = new JTable(); // create table
 		table.setForeground(Color.BLUE);
 		table.setFont(new Font("Tahoma", Font.BOLD, 11));
 		table.setModel(new DefaultTableModel(null, Database.COLUMNS) {
 			boolean[] columnEditables = new boolean[] { false, false, false };
 
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(210);
-		table.getColumnModel().getColumn(1).setPreferredWidth(242);
-		table.getColumnModel().getColumn(2).setPreferredWidth(250);
+		table.getColumnModel().getColumn(0).setPreferredWidth(210); //size of rows
+		table.getColumnModel().getColumn(1).setPreferredWidth(300);
+		table.getColumnModel().getColumn(2).setPreferredWidth(200);
 		table.getColumnModel().getColumn(3).setPreferredWidth(450);
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
@@ -89,24 +98,22 @@ public class SentItems extends JFrame {
 		setVisible(true);
 	}
 
-	public void populateTable() {
+	public void populateTable() { // table filling
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		
+
 		List<DatabaseRecord> records = Database.getRecords();
 
-    	
-    	for (DatabaseRecord record : records) {
-    		List<String> row = new ArrayList<String>();
-    		
-    		row.add(Database.DATE_FORMAT.format(record.getDate()));
-    		row.add(record.getEmail());
-    		row.add(record.getSubject());
-    		row.add(record.getMessage());
-    		
-    		model.addRow(row.toArray());
-    	}
+		for (DatabaseRecord record : records) {
+			List<String> row = new ArrayList<String>();
 
-        
+			row.add(Database.DATE_FORMAT.format(record.getDate()));
+			row.add(record.getEmail());
+			row.add(record.getSubject());
+			row.add(record.getMessage());
+
+			model.addRow(row.toArray());
+		}
+
 	}
-	
+
 }

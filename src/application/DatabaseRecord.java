@@ -7,15 +7,15 @@ public class DatabaseRecord {
 	private Date date;
 
 	private String email;
-	
+
 	private String subject;
-	
+
 	private String message;
-	
+
 	public Date getDate() {
 		return date;
 	}
-	
+
 	public void setDate(Date date) {
 		this.date = date;
 	}
@@ -43,5 +43,5 @@ public class DatabaseRecord {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 }

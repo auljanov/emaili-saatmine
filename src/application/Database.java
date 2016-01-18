@@ -13,7 +13,8 @@ import java.util.List;
 
 public class Database {
 
-	public static final String DELIMITER = ";";
+	// constants creating
+	public static final String DELIMITER = ";"; 
 
 	public static final String DATABASE_FILE = "database.txt";
 
@@ -21,19 +22,20 @@ public class Database {
 
 	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	public static void addRecord(Date date, String mail, String subject, String message) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(DATE_FORMAT.format(date)).append(DELIMITER);
-		sb.append(mail).append(DELIMITER);
-		sb.append(subject).append(DELIMITER);
-		sb.append(message);
+	public static void addRecord(Date date, String mail, String subject, String message)  
+	{
+		StringBuilder stringbuilder = new StringBuilder(); // Create object in class Database
+		stringbuilder.append(DATE_FORMAT.format(date)).append(DELIMITER);
+		stringbuilder.append(mail).append(DELIMITER);
+		stringbuilder.append(subject).append(DELIMITER);
+		stringbuilder.append(message);
 
 		try {
 			FileWriter fileWriter = new FileWriter(getDatabaseFile(), true);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-			bufferedWriter.write(sb.toString()); // zapisali v fail
-			bufferedWriter.newLine(); // dobavili simvil novoj stroki
+			bufferedWriter.write(stringbuilder.toString()); // Write to file
+			bufferedWriter.newLine(); // Add character off new line
 
 			bufferedWriter.flush();
 			bufferedWriter.close();
@@ -45,7 +47,7 @@ public class Database {
 	private static File getDatabaseFile() {
 		File file = new File(DATABASE_FILE);
 
-		if (!file.exists()) { // esli net faila sozdat fail
+		if (!file.exists()) { // if the file is missing, create it
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
@@ -56,36 +58,45 @@ public class Database {
 	}
 
 	public static List<DatabaseRecord> getRecords() {
-		List<DatabaseRecord> records = new ArrayList<>(); // delaem pustoj
+		List<DatabaseRecord> records = new ArrayList<>(); // an empty file
 
-		BufferedReader br = null;
-		try {
+		BufferedReader bufferedreader = null;
+		try { // do stuff
 			FileReader fileReader = new FileReader(getDatabaseFile());
-			br = new BufferedReader(fileReader);
+			bufferedreader = new BufferedReader(fileReader);
 
 			String line = "";
-			// chitaem po strokam fail
-			while ((line = br.readLine()) != null) {
-				// razbivaem po ;
+			// read the file line by line
+			while ((line = bufferedreader.readLine()) != null) {
+				// after reading split lines by delimiter
 				String[] fields = line.split(DELIMITER);
 
-				// sozdajom zapis bazy dannyh. mapim fields na polja
+				// create a record in the database and fields mapping
 				DatabaseRecord record = new DatabaseRecord();
 				record.setDate(DATE_FORMAT.parse(fields[0]));
 				record.setEmail(fields[1]);
 				record.setSubject(fields[2]);
 				record.setMessage(fields[3]);
 
-				// dobavljaem etu zapis k spisku zapisej
+				// add record to other records
 				records.add(record);
 			}
-		} catch (Exception e) {
+		} 
+
+		catch (Exception e) // handle e
+		{
 			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
+		} 
+
+		finally // always executed, even if exception or error 
+		{ 
+			if (bufferedreader != null) 
+			{
+				try 
+				{
+					bufferedreader.close();
 				} catch (IOException ignore) {
+
 				}
 			}
 		}

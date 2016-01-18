@@ -4,38 +4,44 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.JTextComponent;
 
 import application.Database;
 
-public class SendButtonListener implements MouseListener {
+public class MainPageSendButtonListener implements MouseListener {
 
 	private JTextComponent fieldMail;
 
 	private JTextComponent fieldMessage;
 
 	private JTextComponent fieldSubject;
+	
 
-	public SendButtonListener(JTextComponent fieldMail, JTextComponent fieldSubject, JTextComponent fieldMessage) {
-		this.fieldMail = fieldMail;
+	// method for fields...
+	public MainPageSendButtonListener(JTextComponent fieldMail, JTextComponent fieldSubject, JTextComponent fieldMessage) {
+		this.fieldMail = fieldMail; 
 		this.fieldSubject = fieldSubject;
 		this.fieldMessage = fieldMessage;
 	}
 
 	@Override
+	// action on the Send Button
 	public void mouseClicked(MouseEvent e) {
-		Date date = new Date();
 		
+		Date date = new Date();
 		String email = fieldMail.getText();
 		String subject = fieldSubject.getText();
 		String message = fieldMessage.getText();
 		
-//		DatabaseRecord record = new DatabaseRecord();
-//		record.setMail(mail);
-//		record.setSubject(subject);
-//		Database.addRecord(record);
+		Database.addRecord(date, email, subject, message); 
 		
-		Database.addRecord(date, email, subject, message); // eto udalit. postavit vyshe
+		JOptionPane.showMessageDialog(e.getComponent(), "Email was sent successfully!");
+		
+		fieldMail.setText("");
+		fieldSubject.setText("");
+		fieldMessage.setText("");
+		
 	}
 
 	@Override
@@ -55,7 +61,6 @@ public class SendButtonListener implements MouseListener {
 	}
 
 	public void setSentLabel() {
-		// TODO add label as argument, and change text if sent
 		
 	}
 
